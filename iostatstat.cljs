@@ -62,18 +62,12 @@
 (defn device [matrix re]
   (filter #(re-matches re (str (nth % 10))) matrix))
 
-;; TODO sequence of asvc_t and ability to get mean/median: (median (ascv_t ...))
 (if-let [filename (first *command-line-args*)]
   (do
     (if-let [matrix (parse-iostat filename)]
       (do
-        ;; (println (map #(nth % 7) matrix))
-        ;; (prn (filter #(re-matches #"^c.+" (nth % 10)) matrix))
-        (type (nth (first matrix) 10))
-        (prn "Mean on c2,c3,etc " (mean (asvc (device matrix #"^c.+"))))
-        (prn "Median on c2,c3,etc " (median (asvc (device matrix #"^c.+"))))
-        (println "Mean asvc:" (mean (asvc matrix)) "\n"
-                 "Median asvc:" (median (asvc matrix)) "\n"))
+        (println "Mean asvc on disk devices" (mean (asvc (device matrix #"^c.+"))))
+        (println "Median asvc on disk devices" (median (asvc (device matrix #"^c.+"))))
       (println "Error parsing file" filename)))
   (println "Usage: iostatstat <iostat-xpnC.out"))
 
